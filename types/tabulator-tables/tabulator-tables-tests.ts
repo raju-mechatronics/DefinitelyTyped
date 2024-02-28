@@ -66,7 +66,25 @@ table
 
 table.setGroupBy("gender");
 table.setGroupBy(["gender", "age"]);
+table.setGroupBy((data) => {
+    return "";
+});
+table.setGroupBy(["gender", "age", (data) => {
+    return "";
+}, (data) => {
+    return "";
+}]);
+
 table.setGroupStartOpen(true);
+table.setGroupStartOpen([true, false]);
+table.setGroupStartOpen((value: any, count: number, data: any, group: GroupComponent) => {
+    return true;
+});
+table.setGroupStartOpen([true, false, (value: any, count: number, data: any, group: GroupComponent) => {
+    return true;
+}, (value: any, count: number, data: any, group: GroupComponent) => {
+    return true;
+}]);
 
 table.setGroupHeader((value, count, data, group) => {
     return "";
@@ -688,6 +706,14 @@ table
 
 column.updateDefinition({ title: "Updated" });
 table.selectRow("visible");
+table.selectRow(1);
+table.selectRow([1]);
+table.selectRow(table.getRow(1));
+table.selectRow([table.getRow(1)]);
+table.deselectRow(1);
+table.deselectRow([1]);
+table.deselectRow(table.getRow(1));
+table.deselectRow([table.getRow(1)]);
 table.download("csv", "data.csv", { delimiter: "." }, "visible");
 table.download("html", "data.html");
 table.download("html", "data.html", { style: true });
@@ -1440,4 +1466,22 @@ table.on("rowSelectionChanged", (_data, rows, selected, deselected) => {
         ?.getGroup()
         ?.scrollTo("bottom", false)
         .then(() => console.log(cellType, cellData));
+});
+
+// Testing download callbacks
+table = new Tabulator("#testDownloadCallbacks", {
+    downloadReady: (fileContents, blob) => {
+        return blob;
+    },
+    downloadDataFormatter: (data) => {
+        return data;
+    },
+});
+
+// Test groupClickMenu parameter type
+table = new Tabulator("#TestGroupClickMenu", {
+    groupClickMenu(e, component) {
+        component.toggle();
+        return false;
+    },
 });
